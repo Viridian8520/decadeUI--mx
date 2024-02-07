@@ -28,7 +28,7 @@
 /*元素·设置*/
 .shezhi{
     --w: 65px;
-    --h: calc(var(--w) * 82/107); 
+    --h: calc(var(--w) * 82/107);
     width: var(--w);
     height: var(--h);
     bottom: calc(100% - 69px);/*calc提高位置布局精度*/
@@ -42,7 +42,7 @@
 /*元素·退出*/
 .tuichu{
     --w: 65px;
-    --h: calc(var(--w) * 82/107); 
+    --h: calc(var(--w) * 82/107);
     width: var(--w);
     height: var(--h);
     bottom: calc(100% - 69px);
@@ -56,7 +56,7 @@
 /*元素·逃跑*/
 .taopao{
     --w: 65px;
-    --h: calc(var(--w) * 82/107); 
+    --h: calc(var(--w) * 82/107);
     width: var(--w);
     height: var(--h);
     bottom: calc(100% - 69px);
@@ -70,7 +70,7 @@
 /*元素·投降*/
 .touxiang{
     --w: 65px;
-    --h: calc(var(--w) * 82/107); 
+    --h: calc(var(--w) * 82/107);
     width: var(--w);
     height: var(--h);
     bottom: calc(100% - 69px);
@@ -84,7 +84,7 @@
 /*元素·托管*/
 .tuoguan{
     --w: 65px;
-    --h: calc(var(--w) * 82/107); 
+    --h: calc(var(--w) * 82/107);
     width: var(--w);
     height: var(--h);
     bottom: calc(100% - 69px);
@@ -276,7 +276,7 @@
 .control > div.primary2 {
 	font-size: 30px !important; /*字体大小*/
 	background-image: url("./images/uibutton/confirm-bg-c.png");
-	
+
 }
 
 
@@ -322,7 +322,7 @@
 /*	text-shadow: #F5D78E 0 0 1px,
 		black 0 0 2px,
 		black 0 0 2px,
-		black 0 0 2px, 
+		black 0 0 2px,
 		black 0 0 2px,
 		black 0 0 2px,
 		black 0 0 2px;*/
@@ -482,7 +482,7 @@
     overflow: auto;
     flex: 1;
     position: relative;
-    border-right: 3px solid;   
+    border-right: 3px solid;
     border-image-slice: 0 100% 0 0;
     border-image-source: url("./images/uibutton/paiduixian.png");
     height: 96%;/*明细项目长度*/
@@ -518,7 +518,7 @@
     flex: .2;
 }
 /*托管中图片（手杀）*/
-#autonode>div:last-child{                         
+#autonode>div:last-child{
    z-index: 10;
 	top: calc(100% - 180px);
 	left: calc(50% - 530px);
@@ -531,7 +531,7 @@
 	/*display: table;*/
 	background-image: url("./images/SSCD/tuoguan2.png");
 	background-size:100% 100%;
-    -webkit-text-fill-color: transparent;        
+    -webkit-text-fill-color: transparent;
     text-shadow:none!important;
 }
 
@@ -545,7 +545,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务忠臣*/
@@ -557,7 +557,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务反贼*/
@@ -569,7 +569,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务内奸*/
@@ -581,7 +581,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务地主*/
@@ -593,7 +593,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务农民*/
@@ -605,7 +605,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务虎队*/
@@ -617,7 +617,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务魏国*/
@@ -629,7 +629,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务蜀国*/
@@ -641,7 +641,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务吴国*/
@@ -653,7 +653,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务晋国*/
@@ -665,7 +665,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务野心家*/
@@ -677,7 +677,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务群雄*/
@@ -689,7 +689,7 @@
     background-size: 100% 100%;
     width:750px;
     height:400px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
 /*身份任务未知*/
@@ -701,6 +701,16 @@
     background-size: 100% 100%;
     width:720px;
     height:420px;
-    left: 230px;       
+    left: 230px;
     bottom: 80px;
 }
+/* taffy: 修复弃牌确认按钮过大的问题喵 */
+.control.qi, .control.qi.disabled {
+  max-width: 140px;
+}
+/* taffy分界线 */
+/* taffy: 修复手气卡确认按钮过大的问题喵 */
+.control.huan {
+  max-width: 140px;
+}
+/* taffy分界线 */

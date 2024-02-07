@@ -124,7 +124,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
           mingcheng.innerText = get.translation(player.name);
           mingcheng.style.cssText = "display: block;position: absolute;top: -15px;right: 423px;font-size:20px;color:#4B3B30;text-shadow:none;font-weight:bold;font-family: 'FZLBJW';z-index:68"
 
-          //角色等级 
+          //角色等级
           dengji.innerText = num = Math.floor(Math.random() * (200 - 1 + 1) + 1);
           dengji.style.cssText = "display: block;position: absolute;top: -13px;right: 325px;font-size:21px;font-family:'shousha';color: white; !important; z-index:68"
 
@@ -237,7 +237,12 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
             }
           }
           else if (allShown) {
-            var hs = node.getCards('h');
+            // taffy: 注释main1.js原版代码喵
+            // var hs = node.getCards('h');
+            /* taffy分界线 */
+            // taffy: 修复对决模式右键队友节点报错问题喵
+            var hs = player.getCards('h');
+            /* taffy分界线 */
             if (hs.length) {
               ui.create.div('.xcaption', '手牌区域', rightPane.firstChild);
               hs.forEach(function (item) {

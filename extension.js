@@ -1,4 +1,7 @@
 import {ChildNodesWatcher} from '../../noname/library/cache/childNodesWatcher.js';
+// taffy: 修复contains函数报错问题喵
+Array.prototype.contains = Array.prototype.includes;//懒得一个个改了，直接用这个消去报错。
+/* taffy分界线 */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
 	return {
 		name: "十周年UI",
@@ -1265,7 +1268,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							}
 							if (event.result.bool && event.animate !== false) {
 								for (var i = 0; i < event.result.targets.length; i++) {
-									event.result.targets[i].animate('target');
+                  // taffy: 注释extension.js原版代码喵
+									// event.result.targets[i].animate('target');
+                  /* taffy分界线 */
+                  // taffy: 修复animate函数报错问题喵
+                  event.result.targets[i].addTempClass('target');
+                  /* taffy分界线 */
 								}
 							}
 							if (event.dialog) event.dialog.close();
@@ -4363,7 +4371,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								control.style.opacity = 1;
 								//for (i in lib.element.control) control[i] = lib.element.control[i];
 								Object.setPrototypeOf(control, lib.element.Control.prototype);
-								for (i = 0; i < controls.length; i++) {
+								for (var i = 0; i < controls.length; i++) {
 									if (typeof controls[i] == 'function') {
 										control.custom = controls[i];
 									}
@@ -4395,7 +4403,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								dialog.buttons = [];
 								//for (i in lib.element.dialog) dialog[i] = lib.element.dialog[i];
 								Object.setPrototypeOf(dialog, lib.element.Dialog.prototype);
-								for (i = 0; i < arguments.length; i++) {
+								for (var i = 0; i < arguments.length; i++) {
 									if (typeof arguments[i] == 'boolean') dialog.static = arguments[i];
 									else if (arguments[i] == 'hidden') hidden = true;
 									else if (arguments[i] == 'notouchscroll') notouchscroll = true;
@@ -4719,7 +4727,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							var selectableButtons = false;
 							if (event.forceAuto && ui.selected.buttons.length == range[1]) auto = true;
 							else if (range[0] != range[1] || range[0] > 1) auto = false;
-							for (i = 0; i < dialog.buttons.length; i++) {
+							for (var i = 0; i < dialog.buttons.length; i++) {
 								if (dialog.buttons[i].classList.contains('unselectable')) continue;
 								if (event.filterButton(dialog.buttons[i], player) && lib.filter.buttonIncluded(dialog.buttons[i])) {
 									if (ui.selected.buttons.length < range[1]) {
@@ -4788,7 +4796,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 								var selectableCards = false;
 								if (range[0] != range[1] || range[0] > 1) auto = false;
-								for (i = 0; i < cards.length; i++) {
+								for (var i = 0; i < cards.length; i++) {
 									if (lib.config.cardtempname != 'off') {
 										var cardname = get.name(cards[i]);
 										var cardnature = get.nature(cards[i]);
@@ -4898,7 +4906,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								range = get.select(event.selectTarget);
 								var selectableTargets = false;
 								if (range[0] != range[1] || range[0] > 1) auto = false;
-								for (i = 0; i < players.length; i++) {
+								for (var i = 0; i < players.length; i++) {
 									var nochess = true;
 									if (game.chess && !event.chessForceAll && player && get.distance(player, players[i], 'pure') > 7) {
 										nochess = false;
@@ -5004,7 +5012,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								skills2 = game.filterSkills(skills2.concat(lib.skill.global), player, player.getSkills('e').concat(lib.skill.global));
 								event._skillChoice = [];
 								game.expandSkills(skills2);
-								for (i = 0; i < skills2.length; i++) {
+								for (var i = 0; i < skills2.length; i++) {
 									info = get.info(skills2[i]);
 									enable = false;
 									if (typeof info.enable == 'function') enable = info.enable(event);
@@ -7150,8 +7158,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						card.classList.remove('drawinghidden');
 						card.classList.add('feichu');
 						delete card._transform;
-						
-						
+
+
 						var iconName = {
 							equip1: 'icon feichu icon-saber',
 							equip2: 'icon feichu icon-shield',
@@ -7159,12 +7167,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							equip4: 'icon feichu icon-mount',
 							equip5: 'icon feichu icon-treasure'
 						}[skill];
-						
+
 						if (iconName) {
 							var icon = decadeUI.element.create(iconName, card);
 							icon.style.zIndex = '1';
 						}
-						
+
 						var equipNum = get.equipNum(card);
 						var equipped = false;
 						for (var i = 0; i < player.node.equips.childNodes.length; i++) {
@@ -8322,6 +8330,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									card._tempName.dataset.name = cardname;
 									tempname = get.translation(cardname);
 								}
+                // taffy: 修复转化牌没有标签的问题喵
+                card._tempName.textContent = tempname;
+                /* taffy分界线 */
 							}
 
 							if (duicfg.cardUseEffect && event.card && (!event.card.cards || event.card.cards.length == 1)) {
@@ -9671,7 +9682,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (!this.shixiaoedSkills) this.shixiaoedSkills = [];
 					this.shixiaoedSkills.add(skill);
 				},
-				//添加解除失效函数	
+				//添加解除失效函数
 				//看名字就知道是干啥的
 				lib.element.player.unshixiaoSkill = function (skill) {
 					var player = this;
@@ -9979,7 +9990,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var imgBg = document.createElement('img')
 						boxContent.classList.add("timeai");
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-							//--------手杀样式-------------//  
+							//--------手杀样式-------------//
 							boxContent.style.cssText =
 								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;"
 							boxTime.data = 125
@@ -9988,9 +9999,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							imgBg.src = lib.assetURL + 'extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png'
 							imgBg.style.cssText =
 								"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;"
-							//-------------------------//	
+							//-------------------------//
 						} else {
-							//----------十周年样式--------//		
+							//----------十周年样式--------//
 							boxContent.style.cssText =
 								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;"
 							boxTime.data = 120
@@ -9999,7 +10010,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							imgBg.src = lib.assetURL + 'extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png'
 							imgBg.style.cssText =
 								"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;"
-							//--------------------//	
+							//--------------------//
 						}
 						boxContent.appendChild(boxTime)
 						boxContent.appendChild(imgBg)
@@ -10062,7 +10073,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var imgBg = document.createElement('img')
 						boxContent.classList.add("timeai");
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
-							//--------手杀样式-------------//  
+							//--------手杀样式-------------//
 							boxContent.style.cssText =
 								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;"
 							boxTime.data = 125
@@ -10071,9 +10082,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							imgBg.src = lib.assetURL + 'extension/十周年UI/shoushaUI/lbtn/images/uibutton/time.png'
 							imgBg.style.cssText =
 								"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;"
-							//-------------------------//	
+							//-------------------------//
 						} else {
-							//----------十周年样式--------//		
+							//----------十周年样式--------//
 							boxContent.style.cssText =
 								"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;"
 							boxTime.data = 120
@@ -10082,7 +10093,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							imgBg.src = lib.assetURL + 'extension/十周年UI/shoushaUI/lbtn/images/uibutton/timeX.png'
 							imgBg.style.cssText =
 								"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;"
-							//--------------------//	
+							//--------------------//
 						}
 						boxContent.appendChild(boxTime)
 						boxContent.appendChild(imgBg)
@@ -10724,7 +10735,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			}
 			//阶段提示
 			if (config.JDTS) {
-				//等待响应 
+				//等待响应
 				lib.skill._jd_ddxyA = {
 					trigger: {
 						player: ['chooseToRespondBegin'],
@@ -10834,7 +10845,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					},
 				};
-				//等待响应及游戏结束 
+				//等待响应及游戏结束
 				lib.skill._jd_ddxyE = {
 					trigger: {
 						player: ['chooseToRespondEnd', 'useCardToEnd', 'phaseJudgeEnd', 'respondSha',
@@ -10861,7 +10872,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						}
 					},
 				};
-				//死亡或回合结束消失 
+				//死亡或回合结束消失
 				lib.skill._jd_wjsw = {
 					trigger: {
 						global: ['phaseEnd', 'useCardAfter']
@@ -11868,7 +11879,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							ui.click.auto();
 						}
 					}
-				}, parseFloat(lib.config['extension_十周年UI_jindutiaoST'])); //进度条间隔时间100 
+				}, parseFloat(lib.config['extension_十周年UI_jindutiaoST'])); //进度条间隔时间100
 				//-------------//
 				if (window.jindutiaoTeshu == true) {
 					window.timer2 = setInterval(() => {
@@ -11899,7 +11910,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.boxTimeAI = document.createElement('div');
 				window.boxContentAI.setAttribute('id', 'jindutiaoAI');
 				if (lib.config.extension_十周年UI_decadeLayout == "off") {
-					//--------手杀样式-------------//  
+					//--------手杀样式-------------//
 					window.boxContentAI.style.cssText =
 						"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *4/145);width: var(--w);height: var(--h);left:3.5px;bottom:-6.2px;"
 					window.boxTimeAI.data = 125
@@ -11913,10 +11924,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"position:absolute;z-index:91;--w: 122px;--h: calc(var(--w) * 4/145);width: var(--w);height: var(--h);top: 0;"
 					boxContentAI.appendChild(imgBg)
 
-					//-------------------------//	
+					//-------------------------//
 				}
 				else {
-					//----------十周年样式--------//		
+					//----------十周年样式--------//
 					window.boxContentAI.style.cssText =
 						"display:block;position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) *8/162);width: var(--w);height: var(--h);left:1.5px;bottom:-8.2px;"
 					window.boxTimeAI.data = 120
@@ -11929,7 +11940,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					imgBg.style.cssText =
 						"position:absolute;z-index:90;--w: 122px;--h: calc(var(--w) * 8/162);width: var(--w);height: var(--h);top: 0;"
 					window.boxContentAI.appendChild(imgBg)
-					//--------------------//	
+					//--------------------//
 				}
 				window.timerai = setInterval(() => {
 					window.boxTimeAI.data--
@@ -12023,7 +12034,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						this.style.transform = '';
 					};
 				};
-				//--------------------------------//	
+				//--------------------------------//
 				game.open_lifesay = function () {
 					//打开常用语函数
 					if (window.dialog_emoji) {
@@ -12139,7 +12150,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				lib.setScroll(window.chatButton1);
 				window.chatBg.appendChild(window.chatButton1);
 				clickFK(window.chatButton1);
-				//-----------------------------------//	
+				//-----------------------------------//
 				//-----------互动框---------//
 				game.open_hudong = function () {
 					//打开互动框函数
@@ -12159,7 +12170,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//打开美酒函数
 					//这里
 					var list = game.players;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							var target = this;
 							if (window.meijiu.thrownn == true) {
@@ -12196,7 +12207,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//打开鲜花函数
 					//这里
 					var list = game.players;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							if (window.xianhua.thrownn == true)
 								game.me.throwEmotion(this, 'flower');
@@ -12221,7 +12232,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//这里
 					var list = game.players;
 					var num = 10;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							var target = this;
 							if (window.tuoxie.thrownn == true) {
@@ -12262,7 +12273,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					//打开鸡蛋函数
 					//这里
 					var list = game.players;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							if (window.jidan.thrownn == true) {
 								game.me.throwEmotion(this, 'egg');
@@ -12289,7 +12300,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				game.open_cailan = function () {
 					//打开菜篮函数
 					var list = game.players;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							var target = this;
 							if (window.cailan.thrownn == true) {
@@ -12324,7 +12335,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				game.open_qicai = function () {
 					//打开七彩函数
 					var list = game.players;
-					for (i = 0; i < game.players.length; i++) {
+					for (var i = 0; i < game.players.length; i++) {
 						list[i].onclick = function () {
 							var target = this;
 							if (window.qicai.thrownn == true) {

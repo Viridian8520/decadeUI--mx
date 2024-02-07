@@ -48,15 +48,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
         updateSkillControl: function (player, clear) {
           var eSkills = player.getSkills('e', true, false).slice(0);
           var skills = app.get.playerSkills(player, true);
-          
+
           for (var i = 0; i < skills.length; i++) {
             var info = get.info(skills[i]);
             if (info&&info.nopop) skills.splice(i--, 1);
           }
-          
+
           var iSkills = player.invisibleSkills.slice(0);
           game.expandSkills(iSkills);
-          
+
           skills.addArray(iSkills.filter(function (skill) {
             var info = get.info(skill);
             return info&&info.enable;
@@ -410,7 +410,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
                 node.style['-webkit-text-stroke'] = '0.8px rgba(0,0,0,0.55)';
               };
 
-              //这是定义的失效函数，在使命技成功或者失败，芳踪，滔乱，竣攻等技能的函数里补上一个shixiao，按钮就会检测到自动上锁		
+              //这是定义的失效函数，在使命技成功或者失败，芳踪，滔乱，竣攻等技能的函数里补上一个shixiao，按钮就会检测到自动上锁
               if (item.info.zhuanhuanji && !game.me.yangedSkills.contains(item.id)) {
                 var img = ui.create.div('.yang', node, "");
                 //	console.log(node);
@@ -421,7 +421,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
                 var img = ui.create.div('.ying', node, "");
                 img.style.position = "absolute";
               };
-              //如果一个技能在阴按钮函数集合里就创建一个阴按钮					
+              //如果一个技能在阴按钮函数集合里就创建一个阴按钮
             }
             //这里结束2}
 
@@ -667,7 +667,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
         var item = node.querySelector('[data-id="' + k + '"]');
         if (!item) {
           if (!info.zhuanhuanji) item = ui.create.div('.skillMarkItem.xiandingji', node, get.skillTranslation(k, player));
-          //如果不是转换技就调用限定技的标记      
+          //如果不是转换技就调用限定技的标记
           else {
             //判断图片存在，不存在就用底图
             var url = lib.assetURL + 'extension/十周年UI/shoushaUI/skill/images/' + k + '_yang.png';
@@ -686,6 +686,13 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
                 item = ui.create.div('.skillMarkItem.zhuanhuanji', node, '');
                 item.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/' + k + '_yang.png');
               }
+              // taffy: 修复item为null的问题
+              else {
+                item = ui.create.div('.skillMarkItem.zhuanhuanji', node, get.skillTranslation(k, player));
+                item.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_yang.png');
+                item.style.setProperty('--w', '42px');
+              }
+              /* taffy分界线 */
             }
             catch (err) {
               item = ui.create.div('.skillMarkItem.zhuanhuanji', node, get.skillTranslation(k, player));

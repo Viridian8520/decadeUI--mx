@@ -12,7 +12,7 @@
 .player>.long {
 	display: block;
 	--w: 60px;
-	--h: calc(var(--w) * 110/60); 
+	--h: calc(var(--w) * 110/60);
 	width: var(--w);
 	height: var(--h);
 	right: -18px; /*左移*/
@@ -54,7 +54,7 @@
 .player>.wei {
 	display: block;
 	--w: 80px;
-	--h: calc(var(--w) * 40/80); 
+	--h: calc(var(--w) * 40/80);
 	width: var(--w);
 	height: var(--h);
 	left: auto;
@@ -338,14 +338,14 @@ body>.background {
 	transform: none !important;
 }
 
-.hand-special>.cards>.card::after { 
+.hand-special>.cards>.card::after {
 	border-radius: inherit !important;
 	box-shadow: 0px -1px 2px yellow, 0px -1px 5px yellow, 0px 0px 15px yellow;
 	transition: opacity 0.5s;
 }
 
 
-#arena>.card, 
+#arena>.card,
 #arena.oblongcard:not(.chess)>.card,
 #arena.oblongcard:not(.chess) .handcards>.card {
 	width: 108px;
@@ -394,7 +394,7 @@ body>.background {
 	font-size: 80px;
 	line-height: 80px;
 	padding-top: 0;
-}	
+}
 
 .card.mark>.background {
 	line-height: 100%;
@@ -743,3 +743,14 @@ body>.background {
 #arena>.card>.judge-mark {
 	visibility: hidden;
 }
+
+/* taffy: 修复娴静按钮显示异常的问题喵 */
+.control > div > span.thundertext,
+.control > div > span.firetext,
+.control > div > span.greentext,
+.control > div > span.yellowtext {
+  background-image: none;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* taffy分界线 */

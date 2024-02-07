@@ -219,6 +219,9 @@
 	position: absolute;
 	display: flex;
 	flex-direction: column;
+  /* taffy: 装备栏由下叠起 */
+  justify-content: flex-end;
+  /* taffy分界线 */
 }
 
 /*

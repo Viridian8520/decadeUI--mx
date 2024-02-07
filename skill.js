@@ -221,7 +221,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
                         [底部初始化的牌],            	// 必选，可为null，但顶部不能为null
                         底部允许控制的牌数范围,        	// 可选，不填根据初始化的牌数量
                         第一个参数的玩家是否可见);      	// 可选，不设置则根据控制观星的玩家来显示
-                    
+
                     // undefined 均为可设置，其他为只读或调用
                     var properties = {
                         caption: undefined,        	// 设置标题
@@ -1450,7 +1450,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
                         }
                         event.control.replacex(['cancel2']);
                     }
-                    
+
                     event.switchToAuto=function(){
                         var cards=[];
                         var skills=[];
@@ -1823,7 +1823,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
                     if (att > 0) {
                         var es = ui.selected.targets[0].getCards('e');
                         var i;
-                        for (i = 0; i < es.length; i++) {
+                        for (var i = 0; i < es.length; i++) {
                             if (['equip3', 'equip4'].contains(get.subtype(es[i])) && target.getEquip('liulongcanjia')) continue;
                             if (es[i].name == 'liulongcanjia' && target.countCards('e', { subtype: ['equip3', 'equip4'] }) > 1) continue;
                             if (target.isEmpty(get.subtype(es[i]))) break;
