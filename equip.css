@@ -45,14 +45,40 @@
 }
 
 .equips-wrap>.equips-back>div {
+	/*background: rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 6px rgb(200, 150, 80) inset;*/
+	/* taffy: 修复装备栏错位问题喵 */
 	background: rgba(0, 0, 0, 0.4);
 	box-shadow: 0 0 6px rgb(200, 150, 80) inset;
+	/* taffy分界线 */
 	height: 27px;
 	left: 3px;
 	position: initial;
 	right: 3px;
 	width: 100%;
 }
+
+/* taffy: 注释equip.css原版代码喵 */
+/* .equips-wrap>.equips-back>div[data-type='0']{
+	background-image: url("image/decoration/equip1.png");
+}
+
+.equips-wrap>.equips-back>div[data-type='1']{
+	background-image: url("image/decoration/equip2.png");
+}
+
+.equips-wrap>.equips-back>div[data-type='2']{
+	background-image: url("image/decoration/equip3.png");
+}
+
+.equips-wrap>.equips-back>div[data-type='3']{
+	background-image: url("image/decoration/equip4.png");
+}
+
+.equips-wrap>.equips-back>div[data-type='4']{
+	background-image: url("image/decoration/equip5.png");
+} */
+/* taffy分界线 */
 
 .equips-wrap>.equips>div {
 	left: 3px;
@@ -164,16 +190,19 @@
 	z-index: 1;
 }
 
+/*红色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit='heart']>.name2,
 .equips-wrap>.equips>.card[data-suit='diamond']>.name2 {
 	color: #8B0000;
 }
 
+/*黑色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit='spade']>.name2,
 .equips-wrap>.equips>.card[data-suit='club']>.name2 {
 	color: #181818;
 }
 
+/*无色装备牌颜色显示*/
 .equips-wrap>.equips>.card[data-suit='none']>.name2 {
 	background-color: black;
 	color: white;
