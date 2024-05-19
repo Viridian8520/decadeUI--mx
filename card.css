@@ -140,6 +140,10 @@
 	display: none;
 }
 
+.card[data-low='1']>.gaintag.info {
+	top: calc(70% - 16px);
+}
+
 /*卡名辅助显示及控制*/
 .card>.name,
 .card.fullskin>.name,
@@ -162,11 +166,9 @@
     bottom: 20px;
 }
 
-#window[data-card-alternate-name-visible='off'] .card>.name,
-#window[data-card-alternate-name-visible='off'] .card>.range:not(.card-tag) {
+#window[data-card-alternate-name-visible='off'] .card>.name  {
     display: none;
 }
-
 
 /****** 转换牌显示 ******/
 .card>.temp-name {
@@ -176,18 +178,21 @@
     right: 4px;
     width: auto;
 	height: 24px;
-    color: #181818;
+    color: white;
     font-size: 20px;
     font-weight: bold;
-    font-family: shousha;
+    font-family: yuanli;
     line-height: 24px;
     text-align: center;
-    text-shadow: none;
+	text-shadow: 0 0 2px black;
 	white-space: normal;
     background: rgba(228, 207, 166, 0.8);
     border-radius: 2px;
     border: 1px solid black;
-	pointer-events: none
+	pointer-events: none;
+	background-image: url('image/vcard/cardBaseMap.png') !important;
+	background-size: cover;
+	background-position: center;
 }
 
 .card>.temp-name[data-nature='fire'] {
@@ -226,3 +231,55 @@
 	background-size: cover !important;
 }
 
+/*转化花色点数显示*/
+.card>.tempsuitnum {
+	font-size: 25px;
+	color: #351D01;
+	text-align: center;
+	top: -1px;
+	left: -1px;
+	width: 58px;
+	height: 100px;
+	line-height: 42px;
+	text-shadow: 0 0 3px #ffffff;
+	background-image: url('assets/image/viewsuitnum.png');
+	background-size: 70% 60%;
+	background-repeat: no-repeat;
+	letter-spacing: -1px;
+	transform-origin: 0 0;
+	z-index: 2;
+	-webkit-text-size-adjust: none;
+}
+
+.card[data-virtual='1']>.tempsuitnum {
+	display: none;
+}
+
+.card>.tempsuitnum>.num {
+	left: -11px;
+	position: relative;
+}
+
+.card>.tempsuitnum>.suit {
+	left: -10px;
+	top: -22px;
+	position: relative;
+}
+
+.card[data-suit='heart']>.suit-num,
+.card[data-suit='diamond']>.suit-num,
+.card[data-tempsn='heart']>.tempsuitnum,
+.card[data-tempsn='diamond']>.tempsuitnum {
+	color: #DF0101;
+}
+
+.card[data-suit='club']>.suit-num,
+.card[data-suit='spade']>.suit-num,
+.card[data-tempsn='club']>.tempsuitnum,
+.card[data-tempsn='spade']>.tempsuitnum {
+	color: #010101;
+}
+
+.dui-mobile .card>.tempsuitnum>.suit {
+	font-size: 16px;
+}

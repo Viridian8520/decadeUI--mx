@@ -240,12 +240,7 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
             }
           }
           else if (allShown) {
-            // taffy: 注释main1.js原版代码喵
-            // var hs = node.getCards('h');
-            /* taffy分界线 */
-            // taffy: 修复对决模式右键队友节点报错问题喵
             var hs = player.getCards('h');
-            /* taffy分界线 */
             if (hs.length) {
               ui.create.div('.xcaption', '手牌区域', rightPane.firstChild);
               hs.forEach(function (item) {

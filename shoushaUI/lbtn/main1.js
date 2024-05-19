@@ -73,8 +73,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
     /*尽量保持字体大小，行高一致，不然会产生偏移*/
     identityShow.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #C1AD92;text-shadow:none;">' + str + '</span>';/*图层1*/
     identityShowx.innerHTML = '<span style="font-family:shousha; font-size: 17.0px;font-weight:500;text-align: right; line-height: 20px; color: #2D241B; -webkit-text-stroke: 2.7px #322B20;text-shadow:none;">' + str + '</span>';/*图层2*/
+  };
 
-  }
   game.ui_identityShow_init = function () {
     if (game.ui_identityShow == undefined) {
       game.ui_identityShow = ui.create.div('', '身份加载中......');
@@ -110,65 +110,68 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
       liaotian.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/liaotian.png"
       liaotian.style.cssText = "display: block;--w: 135px;--h: calc(var(--w) * 699/960);width: var(--w);height: var(--h);position: absolute;top: calc(100% - 97px);right: calc(100% - 125px);background-color: transparent;z-index:3"
       liaotian.onclick = function () {
-
         if (lib.config['extension_说话_enable']) {
-
           game.showChatWordBackground();
-
-        } else {
-
-          game.showChatWordBackgroundX();
-
         }
-
+        else {
+          game.showChatWordBackgroundX();
+        }
       }
       document.body.appendChild(liaotian);
     }
     /*---------------------*/
 
-    if (lib.config.mode == 'identity' || lib.config.mode == 'th_mougong' || lib.config.mode == 'doudizhu' || lib.config.mode == 'guozhan' || lib.config.mode == 'versus' || lib.config.mode == 'single' || lib.config.mode == 'boss') {
-      /*斗地主*/
-      if (lib.config.mode == 'doudizhu') {
-        var jiaojia = ui.create.node('div');
-        jiaojia.innerText = "本场叫价"
-        jiaojia.style.cssText = "display: line;position: absolute;top: 5px;color: white;left: 56px;font-size:16.5px;font-family:shousha;text-shadow:-1.7px 0px 2.5px #2b1f19, 0px -1.7px 2.5px #2b1f19, 1.7px 0px 2.5px #2b1f19 ,0px 1.7px 2.5px #2b1f19; z-index:1; "
-        document.body.appendChild(jiaojia);
-        var douzi = ui.create.node('div');
-        douzi.innerText = get.translation(innerText = (num = ['300', '600', '900']).randomGet(1));
-        douzi.style.cssText = "display: block;position: absolute;top: -7px;color: gold;left: 141px;font-size:21px;font-family:shousha;font-weight: 900; "
-        ui.arena.appendChild(douzi);
-      } else
-        if (lib.config.mode == 'single') {
-          //单挑
-          var translate = {
+    if (lib.config.mode == 'identity' || lib.config.mode == 'guozhan' || lib.config.mode == 'versus' || lib.config.mode == 'single' || lib.config.mode == 'boss') {
+      var translate = {};
+      switch (lib.config.mode) {
+        case 'single':
+          translate = {
             zhu: '击败对手',
             fan: '击败对手',
             undefined: '未选择阵营',
-          }
-        }
-        else if (lib.config.mode == 'boss') {
-          //挑战
-          var translate = {
+          };
+          break;
+        case 'boss':
+          translate = {
             zhu: '击败盟军',
             cai: '击败神祇',
             undefined: '未选择阵营',
-          }
-        }
-        else if (lib.config.mode == 'guozhan') {
-          //国战
-          var translate = {
+          };
+          break;
+        case 'guozhan':
+          translate = {
             undefined: '未选择势力',
             unknown: '保持隐蔽',
             ye: '&nbsp;&nbsp;&nbsp;击败场上<br>所有其他角色',
             key: '&nbsp;&nbsp;&nbsp;击败所有<br>非键势力角色',
-          }
+          };
           for (var i = 0; i < lib.group.length; i++) {
             translate[lib.group[i]] = '&nbsp;&nbsp;&nbsp;击败所有<br>非' + get.translation(lib.group[i]) + '势力角色';
           }
-        }
-        else if (lib.config.mode == 'identity' && get.config('identity_mode') == 'purple') {
-          //身份：3v3v2
-          var translate = {
+          break;
+        case 'versus':
+          if (get.config('versus_mode') == 'standard') {
+            return;
+          }
+          if (get.config('versus_mode') == 'two') {
+            translate = {
+              undefined: get.config('replace_character_two') ? '抢先击败敌人<br>所有上场角色' : '&nbsp;&nbsp;&nbsp;协同队友<br>击败所有敌人',
+            };
+          }
+          if (get.config('versus_mode') == 'jiange') {
+            translate = {
+              wei: '&nbsp;&nbsp;击败所有<br>蜀势力角色',
+              shu: '&nbsp;&nbsp;击败所有<br>魏势力角色',
+            };
+          }
+          if (get.config('versus_mode') == 'siguo') {
+            for (var i = 0; i < lib.group.length; i++) {
+              translate[lib.group[i]] = '获得龙船或击败<br>非' + get.translation(lib.group[i]) + '势力角色';
+            }
+          }
+          break;
+        default:
+          translate = {
             rZhu: '击败冷方主公<br>与所有野心家',
             rZhong: '保护暖方主公<br>击败冷方主公<br>与所有野心家',
             rYe: '联合冷方野心家<br>击败其他角色',
@@ -177,47 +180,15 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
             bZhong: '保护冷方主公<br>击败暖方主公<br>与所有野心家',
             bYe: '联合暖方野心家<br>击败其他角色',
             bNei: '协助暖方主公<br>击败冷方主公<br>与所有野心家',
-          }
-        }
-        else if (lib.config.mode == 'versus' && get.config('versus_mode') == 'two' && !get.config('replace_character_two')) {
-          //对决：欢乐成双
-          var translate = {
-            undefined: '&nbsp;&nbsp;&nbsp;协同队友<br>击败所有敌人',
-          }
-        }
-        else if (lib.config.mode == 'versus' && get.config('versus_mode') == 'two' && get.config('replace_character_two')) {
-          //对决：欢乐成双（替补模式）
-          var translate = {
-            undefined: '抢先击败敌人<br>所有上场角色',
-          }
-        }
-        else if (lib.config.mode == 'versus' && get.config('versus_mode') == 'jiange') {
-          //对决-剑阁
-          var translate = {
-            wei: '&nbsp;&nbsp;击败所有<br>蜀势力角色',
-            shu: '&nbsp;&nbsp;击败所有<br>魏势力角色',
-          }
-        }
-        else if (lib.config.mode == 'versus' && get.config('versus_mode') == 'siguo') {
-          //对决-四国（同舟共济）
-          var translate = {
-
-          }
-          for (var i = 0; i < lib.group.length; i++) {
-            translate[lib.group[i]] = '获得龙船或击败<br>非' + get.translation(lib.group[i]) + '势力角色';
-          }
-        }
-        else {
-          //身份：标准、明忠
-          var translate = {
             zhu: '推测场上身份<br>击败反贼内奸',
             zhong: '&nbsp;&nbsp;&nbsp;保护主公<br>取得最后胜利',
             fan: '找出反贼队友<br>全力击败主公',
             nei: '找出反贼忠臣<br>最后击败主公',
             mingzhong: '&nbsp;&nbsp;&nbsp;保护主公<br>取得最后胜利',
             undefined: '胜利条件',
-          }
-        }
+          };
+          break;
+      }
       for (var i in translate) {
         lib.translate[i + '_win_option'] = translate[i];
       }
@@ -226,136 +197,127 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
         game.ui_identityShow_update();
       }, 1000);
     }
-  });
+    //右上角菜单栏
+    var head = ui.create.node('img');
+    head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/SSCD/button.png"
+    head.style.cssText = "display: block;--w: 130px;--h: calc(var(--w) * 1080/1434);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 98px);left: calc(100% - 126.2px);background-color: transparent;z-index:1"
+    document.body.appendChild(head);
 
-
-
-
-
-  var head = ui.create.node('img');
-  head.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/SSCD/button.png"
-  head.style.cssText = "display: block;--w: 130px;--h: calc(var(--w) * 1080/1434);width: var(--w);height: var(--h);position: absolute;bottom: calc(100% - 98px);left: calc(100% - 126.2px);background-color: transparent;z-index:1"
-  document.body.appendChild(head);
-
-
-  var head = ui.create.node('div');
-  head.style.cssText = "display: block;width: 134px;height: 103px;position: absolute;top: 0px;right: -8px;background-color: transparent;z-index:1"
-  head.onclick = function () {
-    game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3');
-    var popuperContainer = ui.create.div('.popup-container', { background: "rgb(0,0,0,0)" }, ui.window);
-    popuperContainer.addEventListener('click', event => {
-
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
-      event.stopPropagation();
-      popuperContainer.delete(200);
-    });
-    var yemian = ui.create.div('.yemian', popuperContainer);
-    var shezhi = ui.create.div('.shezhi', popuperContainer);
-    shezhi.addEventListener('click', event => {
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
-      if (!ui.click.configMenu) return;
-      game.closePopped();
-      game.pause2();
-      ui.click.configMenu();
-      ui.system1.classList.remove('shown');
-      ui.system2.classList.remove('shown');
-    });
-    var tuichu = ui.create.div('.tuichu', popuperContainer);
-    tuichu.addEventListener('click', event => {
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
-      window.location.reload();
-    });
-    var taopao = ui.create.div('.taopao', popuperContainer);
-    taopao.addEventListener('click', event => {
-
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
-
-      game.reload();
-    });
-    var touxiang = ui.create.div('.touxiang', popuperContainer);
-    touxiang.addEventListener('click', event => {
-
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
-
-      game.over();
-    });
-    var tuoguan = ui.create.div('.tuoguan', popuperContainer);
-    tuoguan.addEventListener('click', event => {
-
-      game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
-
-      ui.click.auto();
-    });
-  }
-  document.body.appendChild(head);
-
-  /*左上角问号框*/
-  var tipshow = ui.create.node('img');
-  if (lib.config.mode == 'doudizhu') tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/doudizhu.png";
-  else tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/shenfen.png";
-  if (lib.config.mode == 'doudizhu') {
-    tipshow.style.cssText = "display: block;width: 360px;height: 35px;position: absolute;top: -1.3px;left: -35px;background-color: transparent;z-index:3"
-  } else tipshow.style.cssText = "display: block;--w: 400px;--h: calc(var(--w) * 279/2139);width: var(--w);height: var(--h);position: absolute;top: -1px;left:-45px;background-color: transparent;z-index:3"
-
-  if (lib.config.mode == 'identity' || lib.config.mode == 'doudizhu' || lib.config.mode == 'versus' || lib.config.mode == 'guozhan') {
-    tipshow.onclick = function () {
-      var popuperContainer = ui.create.div('.popup-container', ui.window);
+    var head = ui.create.node('div');
+    head.style.cssText = "display: block;width: 134px;height: 103px;position: absolute;top: 0px;right: -8px;background-color: transparent;z-index:1"
+    head.onclick = function () {
       game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3');
-      if (lib.config.mode == 'identity') {
-        if (game.me.identity == 'zhu') {
-          ui.create.div('.sfrwzhugong', popuperContainer);
-        }
-        else if (game.me.identity == 'zhong') {
-          ui.create.div('.sfrwchongchen', popuperContainer);
-        }
-        else if (game.me.identity == 'fan') {
-          ui.create.div('.sfrwfanzei', popuperContainer);
-        }
-        else if (game.me.identity == 'nei') {
-          ui.create.div('.sfrwneijian', popuperContainer);
-        }
-      }
-      if (lib.config.mode == 'doudizhu') {
-        if (game.me.identity == 'zhu') {
-          ui.create.div('.sfrwdizhu', popuperContainer);
-        }
-        else if (game.me.identity == 'fan') {
-          ui.create.div('.sfrwnongmin', popuperContainer);
-        }
-      }
-      if (lib.config.mode == 'versus') {
-        ui.create.div('.sfrwhu', popuperContainer);
-      }
-      if (lib.config.mode == 'guozhan') {
-        if (game.me.group == 'unknown' || game.me.group == 'undefined') {
-          ui.create.div('.sfrwundefined', popuperContainer);
-        }
-        else if (game.me.group == 'wei') {
-          ui.create.div('.sfrwweiguo', popuperContainer);
-        }
-        else if (game.me.group == 'shu') {
-          ui.create.div('.sfrwshuguo', popuperContainer);
-        }
-        else if (game.me.group == 'wu') {
-          ui.create.div('.sfrwwuguo', popuperContainer);
-        }
-        else if (game.me.group == 'qun') {
-          ui.create.div('.sfrwqunxiong', popuperContainer);
-        }
-        else if (game.me.group == 'jin') {
-          ui.create.div('.sfrwjinguo', popuperContainer);
-        }
-        else if (game.me.group == 'ye') {
-          ui.create.div('.sfrwyexinjia', popuperContainer);
-        }
-      }
+      var popuperContainer = ui.create.div('.popup-container', { background: "rgb(0,0,0,0)" }, ui.window);
       popuperContainer.addEventListener('click', event => {
+
         game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
+        event.stopPropagation();
         popuperContainer.delete(200);
       });
-    };
-  }
-  document.body.appendChild(tipshow);
+      var yemian = ui.create.div('.yemian', popuperContainer);
+      var shezhi = ui.create.div('.shezhi', popuperContainer);
+      shezhi.addEventListener('click', event => {
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
+        if (!ui.click.configMenu) return;
+        game.closePopped();
+        game.pause2();
+        ui.click.configMenu();
+        ui.system1.classList.remove('shown');
+        ui.system2.classList.remove('shown');
+      });
+      var tuichu = ui.create.div('.tuichu', popuperContainer);
+      tuichu.addEventListener('click', event => {
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
+        window.location.reload();
+      });
+      var taopao = ui.create.div('.taopao', popuperContainer);
+      taopao.addEventListener('click', event => {
+
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
+
+        game.reload();
+      });
+      var touxiang = ui.create.div('.touxiang', popuperContainer);
+      touxiang.addEventListener('click', event => {
+
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
+
+        game.over();
+      });
+      var tuoguan = ui.create.div('.tuoguan', popuperContainer);
+      tuoguan.addEventListener('click', event => {
+
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/xuanzhe.mp3');
+
+        ui.click.auto();
+      });
+    }
+    document.body.appendChild(head);
+
+    if (lib.config.mode == 'identity' || lib.config.mode == 'doudizhu' || lib.config.mode == 'versus' || lib.config.mode == 'guozhan') {
+      /*左上角问号框*/
+      var tipshow = ui.create.node('img');
+      tipshow.src = lib.assetURL + "extension/十周年UI/shoushaUI/lbtn/images/uibutton/shenfen.png";
+      tipshow.style.cssText = "display: block;--w: 400px;--h: calc(var(--w) * 279/2139);width: var(--w);height: var(--h);position: absolute;top: -1px;left:-45px;background-color: transparent;z-index:1";
+      tipshow.onclick = function () {
+        var popuperContainer = ui.create.div('.popup-container', ui.window);
+        game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/label.mp3');
+        if (lib.config.mode == 'identity') {
+          if (game.me.identity == 'zhu') {
+            ui.create.div('.sfrwzhugong', popuperContainer);
+          }
+          else if (game.me.identity == 'zhong') {
+            ui.create.div('.sfrwchongchen', popuperContainer);
+          }
+          else if (game.me.identity == 'fan') {
+            ui.create.div('.sfrwfanzei', popuperContainer);
+          }
+          else if (game.me.identity == 'nei') {
+            ui.create.div('.sfrwneijian', popuperContainer);
+          }
+        }
+        if (lib.config.mode == 'doudizhu') {
+          if (game.me.identity == 'zhu') {
+            ui.create.div('.sfrwdizhu', popuperContainer);
+          }
+          else if (game.me.identity == 'fan') {
+            ui.create.div('.sfrwnongmin', popuperContainer);
+          }
+        }
+        if (lib.config.mode == 'versus') {
+          ui.create.div('.sfrwhu', popuperContainer);
+        }
+        if (lib.config.mode == 'guozhan') {
+          if (game.me.group == 'unknown' || game.me.group == 'undefined') {
+            ui.create.div('.sfrwundefined', popuperContainer);
+          }
+          else if (game.me.group == 'wei') {
+            ui.create.div('.sfrwweiguo', popuperContainer);
+          }
+          else if (game.me.group == 'shu') {
+            ui.create.div('.sfrwshuguo', popuperContainer);
+          }
+          else if (game.me.group == 'wu') {
+            ui.create.div('.sfrwwuguo', popuperContainer);
+          }
+          else if (game.me.group == 'qun') {
+            ui.create.div('.sfrwqunxiong', popuperContainer);
+          }
+          else if (game.me.group == 'jin') {
+            ui.create.div('.sfrwjinguo', popuperContainer);
+          }
+          else if (game.me.group == 'ye') {
+            ui.create.div('.sfrwyexinjia', popuperContainer);
+          }
+        }
+        popuperContainer.addEventListener('click', event => {
+          game.playAudio('../extension/十周年UI/shoushaUI/lbtn/images/SSCD/caidan.mp3');
+          popuperContainer.delete(200);
+        });
+      };
+      document.body.appendChild(tipshow);
+    }
+  });
 
   var plugin = {
     name: 'lbtn',
@@ -747,11 +709,8 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
         }
       },
 
-
       paixu: function () {
-
         var cards = game.me.getCards("hs");
-
         var sort2 = function (b, a) {
           if (a.name != b.name) return lib.sort.card(a.name, b.name);
           else if (a.suit != b.suit) return lib.suit.indexOf(a) - lib.suit.indexOf(b);
