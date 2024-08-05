@@ -607,7 +607,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										nodeMarkText.innerHTML = get.translation(name)[0];
 									}
 									else {
-										if (!lib.character[name]) return console.error(name);
+										if (!get.character(name)) return console.error(name);
 										var text = info.name.substr(0, 2);
 										if (text.length == 2) nodeMarkText.classList.add('small-text');
 										nodeMarkText.innerHTML = text;
@@ -615,6 +615,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 
 									nodeMark.name = name + '_charactermark';
 									nodeMark.info = info;
+									nodeMark.text = nodeMarkText;
 									nodeMark.addEventListener(lib.config.touchscreen ? 'touchend' : 'click', ui.click.card);
 									if (!lib.config.touchscreen) {
 										if (lib.config.hover_all) {
@@ -639,7 +640,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												content: content,
 												id: id
 											};
-											player.marks[id].setBackground(target, 'character');
 											game.addVideo('changeMarkCharacter', player, {
 												id: id,
 												name: name,
@@ -660,8 +660,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 												target: target
 											});
 										}
+										player.marks[id].setBackground(target, 'character');
 										player.marks[id]._name = target;
 										player.marks[id].style.setProperty('background-size', 'cover', 'important');
+										player.marks[id].text.style.setProperty('font-size', '0px', 'important');
 									}, this, target, name, content, id);
 									return this;
 								},
@@ -1021,6 +1023,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										campName.removeChild(campName.lastChild);
 									}
 									campName.style.removeProperty('background-image');
+									const hujiat = this.node.hpWrap.querySelector('.hujia');
+									if (hujiat) hujiat.remove();
 									base.lib.element.player.$uninit.apply(this, arguments);
 									return this;
 								},
@@ -1062,6 +1066,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 									return this;
 								},
 								directgain: function (cards, broadcast, gaintag) {
+									if (!cards || !cards.length) return;
 									var player = this;
 									var handcards = player.node.handcards1;
 									var fragment = document.createDocumentFragment();
@@ -1114,6 +1119,14 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 											targets[i].classList.remove('target');
 										}
 									};
+									event.pushHandler('decadeUI_LineAnimation', (event, option) => {
+										if (event.step === 1 && option.state === "begin" && !event.hideTargets) {
+											const player = event.player;
+											for (var i = 0; i < targets.length; i++) {
+												if (targets[i] != player) targets[i].classList.add('target');
+											}
+										}
+									});
 									return event;
 								},
 								lose: function () {
@@ -1262,8 +1275,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 										}
 									}
 
-									if (_status.event) {
-										if (_status.event.name == 'loseAsync') isDrawCard = true;
+									if (_status.event && _status.event.name) {
+										if (function (event) {
+											if (event.name != 'gain') return !event.name.includes('raw');
+											return !event.animate || !event.animate.includes('draw');
+										}(_status.event)) isDrawCard = true;
 									}
 
 									if (game.me == this && !isDrawCard) return;
@@ -4670,8 +4686,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var cards = get.cards(num);
 						game.addCardKnower(cards, player);
 						var guanxing = decadeUI.content.chooseGuanXing(player, cards, cards.length, null, cards.length);
-						if (this.getParent() && this.getParent().name && get.translation(this.getParent().name) != this.getParent().name) {
-							guanxing.caption = '【' + get.translation(this.getParent().name) + '】';
+						if (event.getParent() && event.getParent().name && get.translation(event.getParent().name) != event.getParent().name) {
+							guanxing.caption = '【' + get.translation(event.getParent().name) + '】';
 						}
 						else {
 							guanxing.caption = "请按顺序排列牌。";
@@ -4795,17 +4811,27 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							set: function (group) {
 								if (!group) return;
 								this._group = group;
-								this.node.campWrap.dataset.camp = (get.character(this.name) ? get.bordergroup(this.name, true) : group) || group;
+								this.node.campWrap.dataset.camp = group;
 								if (!decadeUI.config.campIdentityImageMode) {
-									this.node.campWrap.node.campName.innerHTML = group ? get.translation(group)[0] : '';
+									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = '';
+									else {
+										const name = get.translation(this._finalGroup), str = get.plainText(name);
+										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+									}
 									return;
 								}
 								var image = new Image();
-								var url;
-								if (decadeUI.config.newDecadeStyle == 'off') url = decadeUIPath + 'image/decorations/name2_' + group + '.png';
-								else url = decadeUIPath + 'image/decoration/name_' + group + '.png';
+								var url = decadeUIPath + (decadeUI.config.newDecadeStyle == 'off' ? 'image/decorations/name2_' : 'image/decoration/name_') + group + '.png';
 								this._finalGroup = group;
-								image.onerror = () => this.node.campWrap.node.campName.innerHTML = this._finalGroup ? get.translation(this._finalGroup)[0] : '';
+								image.onerror = () => {
+									if (!this._finalGroup) this.node.campWrap.node.campName.innerHTML = '';
+									else {
+										const name = get.translation(this._finalGroup), str = get.plainText(name);
+										if (str.length <= 2) this.node.campWrap.node.campName.innerHTML = name;
+										else this.node.campWrap.node.campName.innerHTML = name.replaceAll(str, str[0]);
+									}
+								};
 								this.node.campWrap.node.campName.style.backgroundImage = `url("${url}")`;
 								image.src = url;
 							}
@@ -6238,65 +6264,46 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							break;
 						case 'usecard':
 							tagText = '使用';
+							if (!event.player.hasSkillTag('ignoreLogAI', null, { card: event.card }) && !event.hideTargets && event.targets.length == 1) {
+								if (event.targets[0] == event.player) tagText = '对自己';
+								else tagText = '对' + get.translation(event.targets[0]);
+							}
+							else {
+								tagText = '使用';
+							}
 						case 'respond':
 							if (tagText == '') tagText = '打出';
 
-							const changeShow = function (event, card) {
-								const cardname = event.card.name, cardnature = get.nature(event.card);
-								if ((lib.config.cardtempname != 'off') && ((card.name != cardname) || !get.is.sameNature(cardnature, card.nature, true))) {
-									if (lib.config.extension_十周年UI_showTemp) {
-										if (!card._tempName) card._tempName = ui.create.div('.temp-name', card);
-										var tempname = '';
-										var tempname2 = get.translation(cardname);
-										if (cardnature) {
-											card._tempName.dataset.nature = cardnature;
-											if (cardname == 'sha') {
-												tempname2 = get.translation(cardnature) + tempname2;
-											}
+							const cardname = event.card.name, cardnature = get.nature(event.card);
+							if ((lib.config.cardtempname != 'off') && ((card.name != cardname) || !get.is.sameNature(cardnature, card.nature, true))) {
+								if (lib.config.extension_十周年UI_showTemp) {
+									if (!card._tempName) card._tempName = ui.create.div('.temp-name', card);
+									var tempname = '';
+									var tempname2 = get.translation(cardname);
+									if (cardnature) {
+										card._tempName.dataset.nature = cardnature;
+										if (cardname == 'sha') {
+											tempname2 = get.translation(cardnature) + tempname2;
 										}
-										tempname += tempname2;
+									}
+									tempname += tempname2;
 
-										card._tempName.innerHTML = tempname;
-										card._tempName.tempname = tempname;
-									}
-									else {
-										var node = ui.create.cardTempName(event.card, card);
-										var cardtempnameConfig = lib.config.cardtempname;
-										if (cardtempnameConfig !== 'default') node.classList.remove('vertical');
-									}
+									card._tempName.innerHTML = tempname;
+									card._tempName.tempname = tempname;
 								}
-								const cardnumber = get.number(event.card), cardsuit = get.suit(event.card);
-								if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
-									dui.cardTempSuitNum(card, cardsuit, cardnumber);
+								else {
+									var node = ui.create.cardTempName(event.card, card);
+									var cardtempnameConfig = lib.config.cardtempname;
+									if (cardtempnameConfig !== 'default') node.classList.remove('vertical');
 								}
-							};
-							changeShow(event, card);
-							//卡牌属性于useCard1或respond转变后的显示
-							player.when({ global: ['useCard1', 'respond'] }).filter(evt => evt == event).then(() => {
-								changeShow(trigger, card);
-							}).vars({ card: card, changeShow: changeShow }).assign({ priority: -Infinity, lastDo: true });
-							//隐藏目标over后的目标classList显示和处理区牌信息显示
-							player.when({ global: ['useCard'] }).filter(evt => evt == event).then(() => {
-								const targets = trigger.targets;
-								if (targets && targets.length) {
-									if (!trigger.hideTargets) {
-										for (const target of targets) {
-											if (target != trigger.player) target.classList.add('target');
-										}
-									}
-									if (targets.length == 1) {
-										let tagText, tagNode = card.querySelector('.used-info');
-										if (tagNode == null) tagNode = card.appendChild(dui.element.create('used-info'));
-										if (targets[0] == trigger.player) tagText = '对自己';
-										else tagText = '对' + get.translation(targets[0]);
-										tagNode.textContent = get.translation(trigger.player) + tagText;
-									}
-								}
-							}).vars({ card: card }).assign({ priority: -Infinity, lastDo: true });
+							}
+							const cardnumber = get.number(event.card), cardsuit = get.suit(event.card);
+							if (card.dataset.views != 1 && event.card.cards && event.card.cards.length == 1 && (card.number != cardnumber || card.suit != cardsuit)) {
+								dui.cardTempSuitNum(card, cardsuit, cardnumber);
+							}
 
 							if (duicfg.cardUseEffect && event.card && (!event.card.cards || !event.card.cards.length || event.card.cards.length == 1)) {
-								var name = event.card.name;
-								var nature = event.card.nature;
+								var name = event.card.name, nature = event.card.nature;
 
 								switch (name) {
 									case 'effect_caochuanjiejian':
@@ -7855,12 +7862,34 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					}
 					else {
 						if (event.seperate || lib.config.seperate_control) {
-							event.controlbars = [];
-							for (var i = 0; i < event.controls.length; i++) {
-								event.controlbars.push(ui.create.control([event.controls[i]]));
+							var controls = event.controls.slice(0);
+							var num = 0;
+							controls.remove("cancel2");
+							if ((event.direct && controls.length == 1) || event.forceDirect) {
+								event.result = {
+									control: event.controls[0],
+									links: get.links([event.controls[0]]),
+								};
+								return;
+							}
+							else {
+								event.controlbars = [];
+								for (var i = 0; i < event.controls.length; i++) {
+									event.controlbars.push(ui.create.control([event.controls[i]]));
+								}
 							}
 						}
 						else {
+							var controls = event.controls.slice(0);
+							var num = 0;
+							controls.remove("cancel2");
+							if ((event.direct && controls.length == 1) || event.forceDirect) {
+								event.result = {
+									control: event.controls[0],
+									links: get.links([event.controls[0]]),
+								};
+								return;
+							}
 							event.controlbar = ui.create.control(event.controls);
 						}
 						if (event.dialog) {
@@ -10048,7 +10077,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					switch (pack) {
 						case 'card':
 							if (bool) {
-								lib.init.css(layoutPath + pack, 'main1' + (lib.config.touchscreen ? '' : '_window'));
+								lib.init.css(layoutPath + pack, 'main1' + (get.is.phoneLayout() ? '' : '_window'));
 							}
 							else lib.init.css(layoutPath + pack, 'main2');
 							break;
@@ -10056,7 +10085,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 							lib.init.css(layoutPath + pack, bool ? 'main1' : 'main2');
 							break;
 						default:
-							lib.init.css(layoutPath + pack, (bool ? 'main1' : 'main2') + (lib.config.touchscreen ? '' : '_window'));
+							lib.init.css(layoutPath + pack, (bool ? 'main1' : 'main2') + (get.is.phoneLayout() ? '' : '_window'));
 							break;
 					}
 				}
@@ -11854,15 +11883,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			},
 			intro: (function () {
 				var log = [
-					'魔改十周年 萌修 0.3.1',
-					'添加十周年UI内置视为卡牌显示背景+其他细微调整',
+					'魔改十周年 萌修 0.3.4',
+					'取消非摸牌事件$draw函数对game.me的阻断',
+					'chooseToGuanxing函数bugfix',
 				];
 				return '<p style="color:rgb(210,210,000); font-size:12px; line-height:14px; text-shadow: 0 0 2px black;">' + log.join('<br>•') + '</p>';
 			})(),
 			author: "萌新（转型中）<br>十周年UI原作者：短歌<br>手杀UI原名：界面美化<br>手杀UI原作者：橙续缘",
 			diskURL: "",
 			forumURL: "",
-			version: "0.3.1",
+			version: "0.3.4",
 		},
 		files: {
 			"character": [],
