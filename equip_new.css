@@ -45,12 +45,8 @@
 }
 
 .equips-wrap>.equips-back>div {
-	/*background: rgba(0, 0, 0, 0.4);
-	box-shadow: 0 0 6px rgb(200, 150, 80) inset;*/
-	/* taffy: 修复装备栏错位问题喵 */
 	background: rgba(0, 0, 0, 0.4);
 	box-shadow: 0 0 6px rgb(200, 150, 80) inset;
-	/* taffy分界线 */
 	height: 27px;
 	left: 3px;
 	position: initial;
