@@ -1732,224 +1732,161 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
             },
         },
         huashen: {
-            intro: {
-                markcount: storage => Object.keys(storage.owned).length,
-                content: function (storage, player) {
-                    var str = '';
-                    var list = Object.keys(storage.owned);
-                    if (list.length) {
-                        str += get.translation(list[0]);
-                        for (var i = 1; i < list.length; i++) {
-                            str += '、' + get.translation(list[i]);
+            async content(event, trigger, player) {
+                const map = event.cost_data;
+                if (!map.logged) player.logSkill("huashen");
+                const skill = map.skill,
+                    character = map.character;
+                if (character != player.storage.huashen.current) {
+                    const old = player.storage.huashen.current;
+                    player.storage.huashen.current = character;
+                    player.markSkill("huashen");
+                    game.broadcastAll(function (player, character, old) {
+                        player.tempname.remove(old);
+                        player.tempname.add(character);
+                        player.sex = lib.character[character].sex;
+                        //player.group=lib.character[character][1];
+                        //player.node.name.dataset.nature=get.groupnature(player.group);
+                        const mark = player.marks.huashen;
+                        if (mark) {
+                            mark.setBackground(character, 'character');
+                            mark._name = character;
+                            mark.style.setProperty('background-size', 'cover', 'important');
+                            mark.text.style.setProperty('font-size', '0px', 'important');
                         }
-                    }
-                    var skill = player.storage.huashen.current2;
-                    if (skill) str += '<p>当前技能：' + get.translation(skill);
-                    return str;
-                },
-                onunmark: function (storage, player) {
-                    _status.characterlist.addArray(Object.keys(storage.owned));
-                    storage.owned = {};
-                },
-                mark: function (dialog, content, player) {
-                    var list = Object.keys(content.owned);
-                    if (list.length) {
-                        var skill = player.storage.huashen.current2;
-                        var character = player.storage.huashen.current;
-                        if (skill && character) {
-                            dialog.addSmall([[character], (item, type, position, noclick, node) => lib.skill.rehuashen.$createButton(item, type, position, noclick, node)]);
-                            dialog.add('<div><div class="skill">【' + get.translation(lib.translate[skill + '_ab'] || get.translation(skill).slice(0, 2)) + '】</div>' +
-                                '<div>' + get.skillInfoTranslation(skill, player) + '</div></div>');
+                    }, player, character, old);
+                    game.log(player, "将性别变为了", "#y" + get.translation(lib.character[character].sex) + "性");
+                    await player.changeGroup(lib.character[character].group);
+                }
+                player.storage.huashen.current2 = skill;
+                if (!player.additionalSkills.huashen || !player.additionalSkills.huashen.includes(skill)) {
+                    player.flashAvatar("huashen", character);
+                    player.syncStorage("huashen");
+                    player.updateMarks("huashen");
+                    await player.addAdditionalSkills("huashen", skill);
+                    // lib.skill.rehuashen.createAudio(character,skill,'zuoci');
+                }
+            },
+        },
+        dcqixin: {
+            mark: undefined,
+            init(player, skill) {
+                if (_status.gameStarted && !player.storage.dcqixin_hp) {
+                    player.storage.dcqixin_hp = [player.maxHp, player.maxHp];
+                }
+                const mark = player.marks[skill];
+                if (!mark) player.markSkill(skill);
+                game.broadcastAll((player, skill) => {
+                    lib.skill.dcqixin.$zhuanhuanji(skill, player);
+                }, player, skill);
+            },
+            $zhuanhuanji(skill, player) {
+                const character = Boolean(player.storage[skill]) ? "caojie" : "liuxie";
+                const mark = player.marks[skill];
+                if (mark) {
+                    mark.setBackground(character, 'character');
+                    mark._name = character;
+                    mark.style.setProperty('background-size', 'cover', 'important');
+                    mark.text.style.setProperty('font-size', '0px', 'important');
+                }
+                player.changeSkin({ characterName: "liuxiecaojie" }, "liuxiecaojie" + (player.storage[skill] ? "_shadow" : ""));
+            },
+        },
+        olyicheng: {
+            async content(event, trigger, player) {
+                let num = player.maxHp, cards = get.cards(num, true);
+                await player.showCards(cards, get.translation(player) + "发动了【易城】");
+                if (player.countCards("h")) {
+                    const sum = cards.reduce((num, card) => num + get.number(card), 0);
+                    const { result: { bool, moved } } = await player.chooseToMove("易城：请选择你要交换的牌").set("filterMove", (from, to) => {
+                        return typeof to !== "number";
+                    }).set("list", [
+                        ["牌堆顶", cards, list => {
+                            const sum2 = list.reduce((num, card) => num + get.number(card, false), 0);
+                            return "牌堆顶（现" + sum2 + { 0: "=", "-1": "<", 1: ">" }[get.sgn(sum2 - sum).toString()] + "原" + sum + "）";
+                        }],
+                        ["手牌", player.getCards("h")],
+                    ]).set("filterOk", moved => moved[1].some(i => !get.owner(i))).set("processAI", list => {
+                        const player = get.event("player"),
+                            limit = Math.min(get.event("num"), player.countCards("h"));
+                        let cards = list[0][1].slice(),
+                            hs = player.getCards("h");
+                        if (cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0)) {
+                            cards.sort((a, b) => get.number(a) - get.number(b));
+                            hs.sort((a, b) => get.number(b) - get.number(a));
+                            let cards2 = cards.slice(0, limit),
+                                hs2 = hs.slice(0, limit);
+                            if (hs2.reduce((num, card) => num + get.number(card), 0) > cards2.reduce((num, card) => num + get.number(card), 0)) {
+                                cards.removeArray(cards2);
+                                hs.removeArray(hs2);
+                                return [cards.concat(hs2), hs.concat(cards2)];
+                            }
+                            return [cards, hs];
+                        } else {
+                            cards.sort((a, b) => get.value(b) - get.value(a));
+                            hs.sort((a, b) => get.value(a) - get.value(b));
+                            let cards2 = cards.slice(0, limit),
+                                hs2 = hs.slice(0, limit),
+                                list = [cards, hs];
+                            for (let i = 0; i < limit; i++) {
+                                if (get.value(cards2[i]) > get.value(hs2[i])) {
+                                    const change = [cards2[i], hs2[i]];
+                                    cards[i] = change[1];
+                                    hs[i] = change[0];
+                                } else break;
+                            }
+                            return list;
                         }
-                        if (player.isUnderControl(true)) {
-                            dialog.addSmall([list, (item, type, position, noclick, node) => lib.skill.rehuashen.$createButton(item, type, position, noclick, node)]);
+                    }).set("num", num);
+                    if (bool) {
+                        const puts = player.getCards("h", i => moved[0].includes(i));
+                        const gains = cards.filter(i => moved[1].includes(i));
+                        if (puts.length && gains.length) {
+                            player.$throw(puts, 1000);
+                            await player.lose(puts, ui.special);
+                            await player.gain(gains, "gain2");
+                            //调整手牌顺序
+                            let hs = moved[1].reverse();
+                            hs.forEach((i, j) => {
+                                player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
+                            });
+                            dui.queueNextFrameTick(dui.layoutHand, dui);
+
+                            cards = moved[0].slice();
+                            if (cards.length) {
+                                await game.cardsGotoOrdering(cards);
+                                for (let i = cards.length - 1; i >= 0; i--) {
+                                    ui.cardPile.insertBefore(cards[i], ui.cardPile.firstChild);
+                                }
+                                game.log(cards, "被放回了牌堆顶");
+                                game.updateRoundNumber();
+                            }
+                            await player.showCards(cards, get.translation(player) + "【易城】第一次交换后");
+                            if (cards.reduce((num, card) => num + get.number(card), 0) > sum && player.countCards("h")) {
+                                const { result: { bool } } = await player.chooseBool("易城：是否使用全部手牌交换" + get.translation(cards) + "？").set("choice", (() => {
+                                    return cards.reduce((num, card) => num + get.value(card), 0) > player.getCards("h").reduce((num, card) => num + get.value(card), 0);
+                                })());
+                                if (bool) {
+                                    const hs = player.getCards("h");
+                                    player.$throw(hs, 1000);
+                                    await player.lose(hs, ui.special);
+                                    await player.gain(cards, "gain2");
+                                    cards = hs.slice();
+                                    if (cards.length) {
+                                        await game.cardsGotoOrdering(cards);
+                                        for (let i = cards.length - 1; i >= 0; i--) {
+                                            ui.cardPile.insertBefore(cards[i], ui.cardPile.firstChild);
+                                        }
+                                        game.log(cards, "被放回了牌堆顶");
+                                        game.updateRoundNumber();
+                                    }
+                                    await player.showCards(cards, get.translation(player) + "【易城】第二次交换后");
+                                }
+                            }
                         }
-                        else {
-                            dialog.addText('共有' + get.cnNumber(list.length) + '张“化身”');
-                        }
-                    }
-                    else {
-                        return '没有化身';
                     }
                 }
             },
-            content: function () {
-                'step 0'
-                var name = event.triggername;
-                if (trigger.name != 'phase' || (name == 'phaseBefore' && game.phaseNumber == 0)) {
-                    player.logSkill('huashen');
-                    lib.skill.huashen.addHuashens(player, 2);
-                    event.logged = true;
-                }
-                var cards = [];
-                var skills = [];
-                for (var i in player.storage.huashen.owned) {
-                    cards.push(i);
-                    skills.addArray(player.storage.huashen.owned[i]);
-                }
-                var cond = event.triggername == 'phaseBegin' ? 'in' : 'out';
-                skills.randomSort();
-                skills.sort(function (a, b) {
-                    return get.skillRank(b, cond) - get.skillRank(a, cond);
-                });
-                if (player.isUnderControl()) {
-                    game.swapPlayerAuto(player);
-                }
-                var switchToAuto = function () {
-                    _status.imchoosing = false;
-                    var skill = skills[0], character;
-                    for (var i in player.storage.huashen.owned) {
-                        if (player.storage.huashen.owned[i].contains(skill)) {
-                            character = i; break;
-                        }
-                    }
-                    event._result = {
-                        bool: true,
-                        skill: skill,
-                        character: character
-                    };
-                    if (event.dialog) event.dialog.close();
-                    if (event.control) event.control.close();
-                };
-                var chooseButton = function (player, list, forced) {
-                    var event = _status.event;
-                    player = player || event.player;
-                    if (!event._result) event._result = {};
-                    var prompt = forced ? '化身：选择获得一项技能' : get.prompt('huashen');
-                    var dialog = ui.create.dialog(prompt, [list, (item, type, position, noclick, node) => lib.skill.rehuashen.$createButton(item, type, position, noclick, node)]);
-                    event.dialog = dialog;
-                    event.forceMine = true;
-                    event.button = null;
-                    for (var i = 0; i < event.dialog.buttons.length; i++) {
-                        event.dialog.buttons[i].classList.add('pointerdiv');
-                        event.dialog.buttons[i].classList.add('selectable');
-                    }
-                    event.dialog.open();
-                    event.custom.replace.button = function (button) {
-                        if (!event.dialog.contains(button.parentNode)) return;
-                        if (event.control) event.control.style.opacity = 1;
-                        if (button.classList.contains('selectedx')) {
-                            event.button = null;
-                            button.classList.remove('selectedx');
-                            if (event.control) {
-                                event.control.replacex(['cancel2']);
-                            }
-                        }
-                        else {
-                            if (event.button) {
-                                event.button.classList.remove('selectedx');
-                            }
-                            button.classList.add('selectedx');
-                            event.button = button;
-                            if (event.control && button.link) {
-                                event.control.replacex(player.storage.huashen.owned[button.link]);
-                            }
-                        }
-                        game.check();
-                    }
-                    event.custom.replace.window = function () {
-                        if (event.button) {
-                            event.button.classList.remove('selectedx');
-                            event.button = null;
-                        }
-                        event.control.replacex(['cancel2']);
-                    }
-
-                    event.switchToAuto = function () {
-                        var cards = [];
-                        var skills = [];
-                        for (var i in player.storage.huashen.owned) {
-                            cards.push(i);
-                            skills.addArray(player.storage.huashen.owned[i]);
-                        }
-                        var cond = event.triggername == 'phaseBegin' ? 'in' : 'out';
-                        skills.randomSort();
-                        skills.sort(function (a, b) {
-                            return get.skillRank(b, cond) - get.skillRank(a, cond);
-                        });
-                        _status.imchoosing = false;
-                        var skill = skills[0], character;
-                        for (var i in player.storage.huashen.owned) {
-                            if (player.storage.huashen.owned[i].contains(skill)) {
-                                character = i; break;
-                            }
-                        }
-                        event._result = {
-                            bool: true,
-                            skill: skill,
-                            character: character
-                        };
-                        if (event.dialog) event.dialog.close();
-                        if (event.control) event.control.close();
-                    }
-                    var controls = [];
-                    event.control = ui.create.control();
-                    event.control.replacex = function () {
-                        var args = Array.from(arguments)[0];
-                        if (args.contains('cancel2') && forced) {
-                            args.remove('cancel2');
-                            this.style.opacity = '';
-                        }
-                        args.push(function (link) {
-                            var result = event._result;
-                            if (link == 'cancel2') result.bool = false;
-                            else {
-                                if (!event.button) return;
-                                result.bool = true;
-                                result.skill = link;
-                                result.character = event.button.link;
-                            }
-                            event.dialog.close();
-                            event.control.close();
-                            game.resume();
-                            _status.imchoosing = false;
-                        });
-                        return this.replace.apply(this, args);
-                    }
-                    if (!forced) {
-                        controls.push('cancel2');
-                        event.control.style.opacity = 1;
-                    }
-                    event.control.replacex(controls);
-                    game.pause();
-                    game.countChoose();
-                };
-                if (event.isMine()) {
-                    chooseButton(player, cards, event.logged);
-                }
-                else if (event.isOnline()) {
-                    event.player.send(chooseButton, event.player, cards, event.logged);
-                    event.player.wait();
-                    game.pause();
-                }
-                else {
-                    switchToAuto();
-                }
-                'step 1'
-                var map = event.result || result;
-                if (map.bool) {
-                    if (!event.logged) player.logSkill('huashen');
-                    var skill = map.skill, character = map.character;
-                    if (character != player.storage.huashen.current) {
-                        var old = player.storage.huashen.current;
-                        player.storage.huashen.current = character;
-                        game.broadcastAll(function (player, character, old) {
-                            player.tempname.remove(old);
-                            player.tempname.add(character);
-                            player.sex = lib.character[character][0];
-                        }, player, character, old);
-                        game.log(player, '将性别变为了', '#y' + get.translation(lib.character[character][0]) + '性');
-                        player.changeGroup(lib.character[character][1]);
-                    }
-                    player.storage.huashen.current2 = skill;
-                    if (!player.additionalSkills.huashen || !player.additionalSkills.huashen.contains(skill)) {
-                        player.addAdditionalSkills('huashen', skill);
-                        player.flashAvatar('huashen', character);
-                        player.syncStorage('huashen');
-                        player.updateMarks('huashen');
-                    }
-                }
-            }
         },
         nk_shekong: {
             content: function () {
@@ -2395,16 +2332,26 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
     decadeUI.inheritSubSkill = {
         olziruo: {
             sort: {
-                content() {
-                    let hs = player.getCards("h");
-                    const list = [hs.indexOf(cards[0]), hs.indexOf(cards[1])];
-                    hs[list[0]] = cards[1]; hs[list[1]] = cards[0];
-                    hs.reverse();
+                async content(event, trigger, player) {
+                    event.getParent(2).goto(0);
+                    if (_status.connectMode || !event.isMine()) {
+                        player.tempBanSkill("olziruo_sort", { player: ["useCard1", "useSkillBegin", "chooseToUseEnd"] });
+                    }
+                    const next = player.chooseToMove("自若：请整理手牌顺序", true);
+                    next.set("list", [["手牌", player.getCards("h")]]);
+                    next.set("processAI", list => {
+                        let player = get.player(), cards = list[0][1].slice(0);
+                        cards.sort((a, b) => get.useful(b, player) - get.useful(a, player));
+                        if (player.storage.olziruo) cards.reverse();
+                        return [cards];
+                    });
+                    const result = await next.forResult();
+                    if (!result || !result.bool) return;
+                    let hs = result.moved[0].reverse();
                     hs.forEach((i, j) => {
                         player.node.handcards1.insertBefore(hs[j], player.node.handcards1.firstChild);
                     });
                     dui.queueNextFrameTick(dui.layoutHand, dui);
-                    event.getParent(2).goto(0);
                 },
             },
         },
