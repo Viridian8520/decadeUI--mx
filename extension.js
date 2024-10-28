@@ -3693,9 +3693,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						const config = { childList: true };
 						observer.observe(playerExtend.node.equips, config);
 						//}
-						// taffy: 修复装备栏错位问题喵
-						}
-						/* taffy分界线 */
 
 						Object.defineProperties(realIdentity, {
 							innerHTML: {
@@ -7263,7 +7260,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var tipbanlist = ["_recasting", "jiu"]; //过滤部分触发技能，可以自己添加
 
 						// taffy: 注释extension.js原版代码喵
-						// if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (!tipbanlist.includes(name) && lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -7686,10 +7683,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 								list[i].childNodes[0].classList.add("choice"); /*添加类名*/
 								//--------背水-----//
 								// taffy: 注释extension.js原版代码喵
-								// if (list[i].childNodes[0].innerText.indexOf('背水') != -1 && lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+								// if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_newDecadeStyle != "on") {
 								/* taffy分界线 */
 								// taffy: 保留布局与边框的分开选项喵
-								if (list[i].childNodes[0].innerText.indexOf('背水') != -1 && lib.config.extension_十周年UI_decadeLayout == "off") {
+								if (list[i].childNodes[0].innerText.indexOf("背水") != -1 && lib.config.extension_十周年UI_decadeLayout == "off") {
 								/* taffy分界线 */
 									/*list[i].childNodes[0].setBackgroundImage('extension/无名补丁/image/beishui.png');*/
 									list[i].childNodes[0].setBackgroundImage("extension/十周年UI/shoushaUI/lbtn/images/uibutton/beishui.png");
@@ -7849,7 +7846,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var imgBg = document.createElement("img");
 						boxContent.classList.add("timeai");
 						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -7931,7 +7928,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var imgBg = document.createElement("img");
 						boxContent.classList.add("timeai");
 						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -8034,7 +8031,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var tipAB = document.createElement("img");
 						tipAB.classList.add("tipshow"); //设置统一类名
 						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -8093,7 +8090,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var tipCD = document.createElement("img");
 						tipCD.classList.add("tipshow"); //设置统一类名
 						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -8143,10 +8140,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				filter: function (event, player) {
 					// if(!player.countCards('h','shan')) return false;
 					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == 'shan' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != 'on';
+					// return event.card.name == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == 'shan' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
+					return event.card.name == "shan" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
 					/* taffy分界线 */
 				},
 				content: function () {
@@ -8196,10 +8193,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				filter: function (event, player) {
 					// if(!player.countCards('h','sha')) return false;
 					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == 'sha' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != 'on';
+					// return event.card.name == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == 'sha' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
+					return event.card.name == "sha" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
 					/* taffy分界线 */
 				},
 				content: function () {
@@ -8250,10 +8247,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				filter: function (event, player) {
 					// if(!player.countCards('h','sha')) return false;
 					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == 'tao' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != 'on';
+					// return event.card.name == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == 'tao' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
+					return event.card.name == "tao" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
 					/* taffy分界线 */
 				},
 				content: function () {
@@ -8304,10 +8301,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				filter: function (event, player) {
 					// if(!player.countCards('h','sha')) return false;
 					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == 'jiu' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != 'on';
+					// return event.card.name == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == 'jiu' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
+					return event.card.name == "jiu" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
 					/* taffy分界线 */
 				},
 				content: function () {
@@ -8366,10 +8363,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (info.wuxieable === false) return false;
 
 					// taffy: 注释extension.js原版代码喵
-					// return event.card.name == 'wuxie' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != 'on';
+					// return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_newDecadeStyle != "on";
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					return event.card.name == 'wuxie' && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
+					return event.card.name == "wuxie" && _status.currentPhase != player && player != game.me && lib.config.extension_十周年UI_decadeLayout == "off";
 					/* taffy分界线 */
 				},
 				content: function () {
@@ -8421,7 +8418,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						var tipKL = document.createElement("img");
 						tipKL.classList.add("tipshow"); //设置统一类名
 						// taffy: 注释extension.js原版代码喵
-						// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+						// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 						/* taffy分界线 */
 						// taffy: 保留布局与边框的分开选项喵
 						if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -9472,10 +9469,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (lib.config.extension_十周年UI_KGMH == "1") this.css(layoutPath + "KGMH/" + "kaiguan.css");
 					if (lib.config.extension_十周年UI_KGMH == "2") this.css(layoutPath + "KGMH/" + "kaiguan_new.css");
 					// taffy: 注释extension.js原版代码喵
-					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != 'on');
+					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != "on");
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					var bool = (lib.config.extension_十周年UI_decadeLayout == 'off');
+					var bool = (lib.config.extension_十周年UI_decadeLayout == "off");
 					/* taffy分界线 */
 					if (!(get.mode() == "chess" || get.mode() == "tafang")) {
 						var list = ["character", "lbtn", "skill"];
@@ -9747,7 +9744,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						};
 						floders.forEach(function (dir) {
 							// taffy: 注释extension.js原版代码喵
-							// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+							// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 							/* taffy分界线 */
 							// taffy: 保留布局与边框的分开选项喵
 							if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -9961,10 +9958,10 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			if (!(get.mode() == "chess" || get.mode() == "tafang")) {
 				for (var pack of [/*'card',*/ "character", "lbtn", "skill"]) {
 					// taffy: 注释extension.js原版代码喵
-					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != 'on');
+					// var bool = (lib.config.extension_十周年UI_newDecadeStyle != "on");
 					/* taffy分界线 */
 					// taffy: 保留布局与边框的分开选项喵
-					var bool = (lib.config.extension_十周年UI_decadeLayout == 'off');
+					var bool = (lib.config.extension_十周年UI_decadeLayout == "off");
 					/* taffy分界线 */
 					lib.init.js(
 						layoutPath + pack + "/" + (bool ? "main1.js" : "main2.js"),
@@ -10134,7 +10131,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				window.boxTimeAI = document.createElement('div');
 				window.boxContentAI.setAttribute('id', 'jindutiaoAI');
 				// taffy: 注释extension.js原版代码喵
-				// if (lib.config.extension_十周年UI_newDecadeStyle != 'on') {
+				// if (lib.config.extension_十周年UI_newDecadeStyle != "on") {
 				/* taffy分界线 */
 				// taffy: 保留布局与边框的分开选项喵
 				if (lib.config.extension_十周年UI_decadeLayout == "off") {
@@ -11400,8 +11397,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				// taffy: 注释extension.js原版代码喵
 				// onclick: function (control) {
-				// 	const origin = lib.config['extension_十周年UI_newDecadeStyle'];
-				// 	game.saveConfig('extension_十周年UI_newDecadeStyle', control);
+				// 	const origin = lib.config["extension_十周年UI_newDecadeStyle"];
+				// 	game.saveConfig("extension_十周年UI_newDecadeStyle", control);
 				// 	if (origin != control) {
 				// 		setTimeout(() => game.reload(), 100);
 				// 	}
@@ -11410,12 +11407,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				update: function () {
 					// taffy: 注释extension.js原版代码喵
 					// if (window.decadeUI) {
-					// 	ui.arena.dataset.newDecadeStyle = lib.config['extension_十周年UI_newDecadeStyle'];
-					// 	ui.arena.dataset.decadeLayout = lib.config['extension_十周年UI_newDecadeStyle'] == 'on' ? 'on' : 'off';
+					// 	ui.arena.dataset.newDecadeStyle = lib.config["extension_十周年UI_newDecadeStyle"];
+					// 	ui.arena.dataset.decadeLayout = lib.config["extension_十周年UI_newDecadeStyle"] == "on" ? "on" : "off";
 					// }
           /* taffy分界线 */
 				  // taffy: 保留布局与边框的分开选项喵
-					if (window.decadeUI) ui.arena.dataset.newDecadeStyle = lib.config['extension_十周年UI_newDecadeStyle'];
+					if (window.decadeUI) ui.arena.dataset.newDecadeStyle = lib.config["extension_十周年UI_newDecadeStyle"];
 					/* taffy分界线 */
 				}
 			},
@@ -11452,15 +11449,16 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			decadeLayout: {
 				name: '<b><font color=\"#0040FF\">界面布局',
 				intro: '<b><font color=\"#0040FF\">切换界面布局样式，初始为十周年布局，根据个人喜好自行切换，重启生效',
-				init: 'off',
+				init: "on",
 				item: {
-					on: '十周年样式',
-					off: '手杀样式',
+					on: "十周年样式",
+					off: "手杀样式",
 				},
 				update: function () {
-					if (window.decadeUI) ui.arena.dataset.decadeLayout = lib.config['extension_十周年UI_decadeLayout'];
+					if (window.decadeUI) ui.arena.dataset.decadeLayout = lib.config["extension_十周年UI_decadeLayout"];
 				}
 			},
+      /* taffy分界线 */
 			aloneEquip: {
 				name: '<b><font color="#99FF75">单独装备栏',
 				intro: '<b><font color="#99FF75">切换玩家装备栏为单独装备栏或非单独装备栏，初始为单独装备栏，根据个人喜好调整',

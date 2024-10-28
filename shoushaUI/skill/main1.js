@@ -949,9 +949,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
               }
               // taffy: 修复item为null的问题
               else {
-                item = ui.create.div('.skillMarkItem.zhuanhuanji', node, get.skillTranslation(k, player));
-                item.setBackgroundImage('extension/十周年UI/shoushaUI/skill/images/ditu_yang.png');
-                item.style.setProperty('--w', '42px');
+                item = ui.create.div(".skillMarkItem.zhuanhuanji", node, get.skillTranslation(k, player));
+                item.setBackgroundImage("extension/十周年UI/shoushaUI/skill/images/ditu_yang.png");
+                item.style.setProperty("--w", "42px");
               }
               /* taffy分界线 */
             } catch (err) {
