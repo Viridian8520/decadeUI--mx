@@ -55,8 +55,7 @@
 	width: 100%;
 }
 
-/* taffy: 注释equip.css原版代码喵 */
-/* .equips-wrap > .equips-back > div[data-type="0"] {
+.equips-wrap > .equips-back > div[data-type="0"] {
 	background-image: url("image/decoration/equip1.png");
 }
 
@@ -74,8 +73,7 @@
 
 .equips-wrap > .equips-back > div[data-type="4"] {
 	background-image: url("image/decoration/equip5.png");
-} */
-/* taffy分界线 */
+}
 
 .equips-wrap > .equips > div {
 	left: 3px;

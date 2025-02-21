@@ -42,6 +42,9 @@ app.import(function (lib, game, ui, get, ai, _status, app) {
 				}
 			},
 			playerIntro(e) {
+				// taffy: 修复浏览器右键会默认冒出选项喵
+				e.preventDefault();
+				/* taffy分界线 */
 				e.stopPropagation();
 
 				if (plugin.playerDialog) {
