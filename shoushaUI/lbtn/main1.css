@@ -161,7 +161,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	left: 1.6%;
-	bottom: 25.2%;
+	bottom: 22%;
 	z-index: 5;
 	font-size: 18.1px;
 	/*字体大小*/
@@ -198,12 +198,8 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
-	/*--w: 68px;
-	--h: calc(var(--w) * 78/91);
-	width: var(--w);
-	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 15%;
+	bottom: 12%;
 	z-index: 5;
 }
 
@@ -340,6 +336,7 @@
 	line-height: var(--sh);
 	margin: 0px 5px !important;
 	/*元素离边缘的距离，外边距，简单说就是确定与取消之间的距离*/
+	background-image: url("./images/uibutton/huanpai.png");
 	padding: 12px 36px !important;
 	/*按钮高度+宽度 建议别调*/
 	min-height: 20px;
@@ -386,13 +383,6 @@
 	color: #ffffff;
 	font-weight: 100 !important;
 	font-size: 13px !important;
-	/*	text-shadow: #F5D78E 0 0 1px,
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px, 
-		black 0 0 2px,
-		black 0 0 2px,
-		black 0 0 2px;*/
 }
 
 /*手牌数图片*/
@@ -406,7 +396,6 @@
 	height: var(--h);
 	background-image: url("./images/uibutton/shoupai1.png");
 	background-size: 100% 100%;
-	/*	box-shadow: 2px 2px 1px #2b2219;*/
 	position: relative;
 	z-index: -1;
 }
@@ -422,6 +411,7 @@
 	line-height: 25px;
 	text-align: right;
 	font-size: 18px;
+	-webkit-text-stroke: 0.4px black;
 	white-space: nowrap;
 }
 
@@ -432,6 +422,7 @@
 	right: 123px;
 	/*牌堆数及游戏时间，轮数整体。越大越往左*/
 	font-family: "shousha";
+	text-shadow: black 1px 1px 1px, black 1px -1px 1px, black -1px 1px 1px, black -1px -1px 1px;
 }
 
 /*牌堆图片*/
@@ -846,7 +837,7 @@
 	height: 55px;
 	background-image: url("./images/uibutton/btn-paixu.png");
 	right: 1.2%;
-	bottom: 25%;
+	bottom: 22%;
 	z-index: 5;
 	font-size: 18.1px;
 	background-size: 100% 100%;
@@ -875,12 +866,8 @@
 	border-radius: 1px;
 	width: 68px;
 	height: 55px;
-	/*--w: 68px;
-	--h: calc(var(--w) * 78/91);
-	width: var(--w);
-	height: var(--h);*/
 	background-image: url("./images/uibutton/btn-jilu.png");
-	bottom: 15%;
+	bottom: 12%;
 	z-index: 5;
 }
 
