@@ -37,9 +37,7 @@ decadeModule.import(function (lib, game, ui, get, ai, _status) {
 		});
 		// 这里可以改成  }, true);  设置右将动皮
 	*/
-
 	decadeUI.dynamicSkin = {};
-
 	var extend = {};
 	decadeUI.get.extend(decadeUI.dynamicSkin, extend);
 });
