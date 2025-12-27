@@ -1,0 +1,145 @@
+import { lib, game, ui, get, ai, _status } from "noname";
+
+// 核心模块
+import { bootstrapExtension } from "./core/bootstrap.js";
+import { createDecadeUIObject } from "./core/decadeUI.js";
+import { registerDecadeUIUtilityModule, enhanceDecadeUIRuntime } from "./core/utility.js";
+
+// 动画模块
+import { setupGameAnimation } from "./animation/gameIntegration.js";
+
+// 特效模块
+import { setupEffects } from "./effects/index.js";
+
+// 功能模块
+import { setupAutoSelect } from "./features/autoSelect.js";
+import { setupCardDragSort } from "./features/cardDragSort.js";
+import { setupEquipHand } from "./features/equipHand.js";
+import { setupLuckyCard } from "./features/luckyCard.js";
+import { setupExtensionToggle } from "./features/extensionToggle.js";
+
+// 音频模块
+import { setupSkillDieAudio, setupAudioHooks, setupEnhancedAudio } from "./audio/index.js";
+
+// 皮肤模块
+import { setupDynamicSkin } from "./skins/index.js";
+
+// UI模块
+import { registerLegacyModules } from "./ui/progress-bar.js";
+import { initCardPrompt } from "./ui/cardPrompt.js";
+import { initComponent } from "./ui/component.js";
+import { setupCharacterBackground } from "./ui/characterBackground.js";
+import { setupCardStyles, updateCardStyles } from "./ui/cardStyles.js";
+import { setupCharacterNamePrefix } from "./ui/characterNamePrefix.js";
+import { setupSkillDisplay } from "./ui/skillDisplay.js";
+
+// 技能模块
+import { initSkills } from "./skills/index.js";
+
+// UI插件模块
+import { createLbtnPlugin } from "../ui/lbtn/plugin.js";
+import { createSkillPlugin } from "../ui/skill/plugin.js";
+import { createCharacterPlugin } from "../ui/character/plugin.js";
+
+/** 完成核心初始化 */
+export const finalizeDecadeUICore = (decadeUI, config) => {
+	registerDecadeUIUtilityModule(decadeUI);
+	decadeUI.config = config;
+	decadeUI.config.campIdentityImageMode ??= true;
+
+	// 配置更新函数
+	const updateFn = () => {
+		const menu = lib.extensionMenu[`extension_${decadeUIName}`];
+		for (const key in menu) {
+			if (menu[key] && typeof menu[key].update === "function") menu[key].update();
+		}
+	};
+	duicfg.update = updateFn;
+	decadeUI.config.update = updateFn;
+
+	decadeUI.init();
+
+	// 初始化各模块
+	setupGameAnimation(lib, game, ui, get, ai, _status);
+	setupEffects();
+	initComponent(decadeUI);
+	initSkills();
+	initCardPrompt({ lib, game, ui, get });
+	setupAutoSelect();
+	setupCardDragSort();
+	setupEquipHand();
+	setupLuckyCard();
+	setupExtensionToggle();
+	setupEnhancedAudio();
+	setupCharacterBackground();
+	setupCardStyles();
+	decadeUI.updateCardStyles = updateCardStyles; // 暴露热更新方法
+	setupCharacterNamePrefix();
+	setupSkillDisplay();
+	setupSkillDieAudio();
+	setupAudioHooks();
+	setupDynamicSkin();
+
+	console.timeEnd(decadeUIName);
+	return decadeUI;
+};
+
+/**
+ * 加载UI插件模块
+ */
+function loadUIPlugins() {
+	const excludedModes = ["chess", "tafang", "hs_hearthstone"];
+	if (excludedModes.includes(get.mode())) return;
+
+	const plugins = [
+		{ name: "lbtn", creator: createLbtnPlugin },
+		{ name: "skill", creator: createSkillPlugin },
+		{ name: "character", creator: createCharacterPlugin },
+	];
+
+	plugins.forEach(({ name, creator }) => {
+		try {
+			const plugin = creator(lib, game, ui, get, ai, _status, window.app);
+			if (plugin) {
+				if (plugin.name) window.app.pluginsMap[plugin.name] = plugin;
+				if (plugin.precontent && (!plugin.filter || plugin.filter())) {
+					plugin.precontent();
+				}
+				window.app.plugins.push(plugin);
+				console.log(`[十周年UI] ${name}模块加载成功`);
+			}
+		} catch (e) {
+			console.error(`[十周年UI] ${name}模块加载失败:`, e);
+		}
+	});
+}
+
+/**
+ * 扩展content函数 - 无名杀扩展主入口
+ */
+export async function content(config, pack) {
+	if (!bootstrapExtension()) return;
+
+	// 创建全局配置对象，首次导入时使用默认值
+	window.duicfg = {
+		dynamicSkin: lib.config.extension_十周年UI_dynamicSkin ?? false,
+		newDecadeStyle: lib.config.extension_十周年UI_newDecadeStyle ?? "on",
+	};
+
+	// 创建decadeUI核心对象
+	const decadeUI = createDecadeUIObject();
+	window.decadeUI = decadeUI;
+	window.dui = decadeUI;
+
+	// 增强运行时功能
+	enhanceDecadeUIRuntime(decadeUI);
+
+	// 完成初始化
+	finalizeDecadeUICore(decadeUI, config);
+
+	// 注册进度条等遗留模块
+	registerLegacyModules(config);
+
+	// 加载UI插件模块
+	loadUIPlugins();
+}
