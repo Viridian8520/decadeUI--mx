@@ -130,6 +130,8 @@ export async function content(config, pack) {
 	const decadeUI = createDecadeUIObject();
 	window.decadeUI = decadeUI;
 	window.dui = decadeUI;
+	// taffy: 兼容旧扩展命名
+	window.duilib = decadeUI;
 
 	// 增强运行时功能
 	enhanceDecadeUIRuntime(decadeUI);
